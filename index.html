@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather App</title>
+    <!-- boot link -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <!-- script link -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+    <!-- font awsom -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+<body style="background-image: url(./images/background\ image4.png);background-size: 100%;"> 
+    <div class="container">
+        <div class="row">
+            <h1 class="text-center" style="padding-top: 80px;"><span style="color: dodgerblue;">Weather</span> App</h1>
+
+            <div class="card text-center  mt-5 mx-auto" style="background-color: black;opacity: 0.8; width: 500px;">
+                <div class="card-header ">
+                  <div style="text-align: left;color: white;">
+                    <h2 id="datee" style="color: yellow;"></h2>
+                  </div>
+                  <div style="text-align: end; color: white; margin-top: -40px;" >
+                    <!-- <input  value="🔃" type="button" style="background-color: black;" onclick="clearAll()"> -->
+                    <div class="btn btn-dark" onclick="clearAll()"><i class="fa-solid fa-rotate-right"></i></i></div>
+                  </div>
+                </div>
+                <form class="card-body">
+                  <div class="card-title">
+                    <label class="form-label">Enter the City</label>
+                    <input id="input_region"   type="text" class="form-control" style="text-align: center;">
+                  </div>
+                  <p class="card-text">Refresh after every serch.</p>
+                  <div class="btn btn-primary" onclick="search()"><i class="fa-solid fa-magnifying-glass"></i></div>
+                </form>
+
+                <div class="mx-auto" id="result" style="color: white;">
+                  
+                </div>
+
+                </div>
+              </div>
+
+        </div>
+    </div>
+</body>
+<script>
+  function getDate(){
+    const date=new Date()
+    let day = date.getDate()
+    console.log(day);
+    let month = date.getMonth()
+    console.log(month +1);
+    let year = date.getFullYear()
+    console.log(year);
+
+    datee.innerHTML = `${day}/${month+1}/${year}`
+
+  }
+  function clearAll(){
+    // input_region.value = ''
+    location.reload();
+   
+  }
+  
+
+
+  getDate()
+
+  //function defenition
+  const search = async() =>{
+    let regionName = input_region.value
+    console.log(regionName);
+
+    if(regionName){
+          const response = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${regionName}&APPID=9fb4578dddd0e0f66020e5ba6d2f2c76&units=metric`)
+    
+          
+          if(response.status>=200&&response.status<300){
+            console.log(response.status);
+
+              response.json().then((data)=>{console.log(data.main);
+      
+                let regionNamee = data.name
+                console.log(regionNamee);
+  
+                let temperature = data.main.temp
+                console.log(parseInt(temperature));
+  
+                let humidity = data.main.humidity
+                console.log(humidity);
+  
+                let mist = data.weather[0].main
+                console.log(mist);
+  
+                let windspeed = data.wind.speed
+                console.log(windspeed);
+  
+                let temperatureMax = data.main.temp_max
+                console.log(temperatureMax);
+  
+                let temperatureMin = data.main.temp_min
+                console.log(temperatureMin);
+  
+                result.innerHTML=`
+                <div">
+                <h2>${regionNamee}<h5>,IN</h5></h2>
+                <h1>${temperature} °C</h1>
+                </div>
+                <div>
+                <h2 style="color: yellow;">${mist}<h2> <br>
+                </div>
+                <h4>Humidity : ${humidity} %</h4>
+                Temp Max:${temperatureMax} &nbsp/ Temp Min:${temperatureMin}<br>
+                <h3><i class="fa-solid fa-wind" style="color: yellow;"></i>&nbsp${windspeed} km/h </h3>
+                </div>  
+                `
+    
+  
+              })
+              
+
+          }
+          else{
+            alert('The place name is not fount')
+          }
+             
+    }
+     else{
+      alert('Please Enter a City')
+      }
+  }
+  
+</script>
+</html>
